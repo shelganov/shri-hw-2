@@ -1,0 +1,270 @@
+
+.card {
+  position: relative;
+  display: flex;
+  border-radius: 20px;
+  transition: .2s all;
+  flex-direction: column;
+  width: 320px;
+  margin: 0 auto;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 2px 6px 0 rgba(197,186,186,0.50);
+
+    .card__cross,
+    .card__next {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+
+    @include m(xs) {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  &__cross {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 14px;
+    height: 14px;
+    background: url('../img/cross.svg') no-repeat center;
+    background-size: cover;
+    visibility: hidden;
+    opacity: 0;
+    transition: .2s all;
+
+    @include m(xs) {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  &__next {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 10px;
+    height: 16px;
+    background: url('../img/next.svg') no-repeat center;
+    background-size: cover;
+    visibility: hidden;
+    opacity: 0;
+    transition: .2s all;
+  }
+
+  &__wrap {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+
+    @include m(xs) {
+      height: 36px;
+    }
+  }
+
+  &__title {
+    display: inline-block;
+    max-height: 56px;
+    margin-left: 19px;
+    font-size: 24px;
+    font-weight: 700;
+    overflow: hidden;
+
+    @include m-max(900px) {
+      font-size: 21px;
+    }
+
+    @include m(xs) {
+      max-height: 36px;
+      font-size: 14px;
+    }
+  }
+
+  &__source {
+    @include m(xs) {
+      font-size: 12px;
+    }
+  }
+
+  &__text {
+    grid-column: span 2;
+    width: 100%;
+
+    @include m(xs) {
+      letter-spacing: .3px;
+    }
+
+    @include m(xs) {
+      font-size: 18px;
+    }
+  }
+
+  &__img {
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: 0;
+    -webkit-overflow-scrolling: touch;
+      height: 230px;
+    &.image-hoover {
+      background-image: url('../img/flat.jpg');
+
+      //width: 99999px;
+      //overflow: auto;
+      //transform: translate3d(-458px, 0, 0);
+
+      //@include m(xs) {
+      //  height: 246px;
+      //}
+    }
+  }
+
+  & > *:last-child {
+
+    @include m-min(768px) {
+      margin-top: auto;
+    }
+  }
+
+
+  // Вариации карточек - размеры
+  &_size_l {
+    grid-column: span 6;
+    grid-row: span 6;
+
+    @include m-min(768px) {
+      grid-column: span 4;
+    }
+
+
+    .card__text {
+      padding-right: 40px;
+      margin-top: 21px;
+
+      @include m(lg) {
+        font-size: 24px;
+        margin-top: 18px;
+      }
+
+      @include m(xs) {
+        padding-right: 0;
+      }
+    }
+    //.card__description {
+    //  margin-top: 17px;
+    //}
+
+    //shortFix
+    .card__header {
+      margin-bottom: 17px;
+    }
+
+    .card__img {
+      margin-top: 51px;
+      border-radius: 20px;
+      overflow: hidden;
+
+      @include m(xs) {
+        margin-top: 19px;
+      }
+    }
+
+    &.card_type_critical {
+      .card__text {
+        @include m(xs) {
+          letter-spacing: .1px;
+        }
+      }
+    }
+  }
+
+  // Вариации карточек - типы
+
+  &_type_info {
+    padding: 20px;
+    background: #FAFAFA;
+    &:hover {
+      background-color: #F3F3F3;
+    }
+
+    @include m(xs) {
+      padding: 16px;
+    }
+  }
+
+  &_type_critical {
+    padding: 0;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background-color: #DB5341;
+    &:hover {
+      .card__content {
+        background-color: #F3F3F3;
+      }
+    }
+
+    .card__header {
+      padding: 0 20px 0;
+      margin-top: 20px;
+      color: #FFF;
+
+      @include m(xs) {
+        margin-top: 14px;
+      }
+    }
+
+    .card__source {
+      padding-left: 20px;
+    }
+
+    .card__time {
+      padding-right: 20px;
+    }
+    
+    .card__source,
+    .card__time {
+      color: #FFF;
+    }
+
+    .card__wrap {
+      margin-bottom: 17px;
+    }
+    .card__content {
+      padding: 20px 20px 24px;
+      background-color: #FAFAFA;
+      -webkit-border-radius: 20px;
+      -moz-border-radius: 20px;
+      border-radius: 20px;
+
+      @include m(xs) {
+        padding: 20px 16px 16px;
+      }
+
+      .card__text {
+        margin-top: 0;
+      }
+
+      .card__img {
+        margin-top: 29px;
+
+        @include m(xs) {
+          margin-top: 19px;
+        }
+      }
+    }
+  }
+}

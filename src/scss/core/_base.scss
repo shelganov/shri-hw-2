@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  color: $text-color-base;
+  line-height: 1.2;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.content {
+  position: relative;
+  min-width: 320px;
+  min-height: 100%;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  transition: .3s transform ease-out;
+
+  // При открытии моб меню - скрываем влево контент
+  &--visible--no {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    transform: translate3d(-80%, 0, 0);
+  }
+}
