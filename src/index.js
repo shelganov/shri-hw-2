@@ -56,8 +56,6 @@ class Camera {
             this.scroll = document.querySelector('.card__img-scroll');
             document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
 
-            // console.log(document.querySelector('.card__img').offsetWidth);
-            // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
             /**
              * Тач старт
              */
@@ -70,7 +68,6 @@ class Camera {
                 this.action.y = e.y;
                 this.camera.setPointerCapture(e.pointerId);
 
-                console.log(e);
             });
 
             /**
@@ -85,18 +82,18 @@ class Camera {
                 if (this.gestureCache.length == 2) {
                     this.updateEvent(e);
 
-                    let angle = (Math.atan2(this.gestureCache[1].y - this.gestureCache[0].y, this.gestureCache[1].x - this.gestureCache[0].x)) * 180 / Math.PI;
+                    let angle = (Math.atan((this.gestureCache[1].y - this.gestureCache[0].y) / (this.gestureCache[1].x - this.gestureCache[0].x))) * 180 / Math.PI;
+
+                    // Проверяем, какое событие происходит
                     if (Math.abs(angle) < 20) {
                         this.zoom(e);
                     } else {
                         this.rotate(e);
                     }
 
-                    document.querySelector('#log').innerHTML = ` angle: ${Math.abs(angle)}`;
                 } else {
                     this.move(e);
                 }
-                // this.prevZoom = this.gestureSpace;
 
             });
 
@@ -117,6 +114,19 @@ class Camera {
                 this.prevZoom = -1;
             });
         });
+    }
+
+    /**
+     * Обновляет событие
+     * @param e
+     */
+    updateEvent(e) {
+        for (let i = 0; i < this.gestureCache.length; i++) {
+            if (this.gestureCache[i].pointerId == e.pointerId) {
+                this.gestureCache[i] = e;
+                break;
+            }
+        }
     }
 
     /**
@@ -157,7 +167,6 @@ class Camera {
         // Смещение камеры
         this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
 
-        console.log(this.cameraImg.offsetWidth)
         // Смещение скролла
         this.scroll.style.left = `${- (this.action.dx * 100) / (this.imgFinishPositionX)}%`;
         // this.scroll.style.transform = `translateX(${-this.action.dx}px)`;
@@ -183,9 +192,9 @@ class Camera {
                 if (this.scale - (_dZoom) <= 1)
                     return;
 
-                this.cameraImg.style.transform = `scale(${this.scale - (_dZoom)})`;
+                this.cameraImg.style.transform = `scale(${this.scale - (_dZoom)},${this.scale - (_dZoom)})`;
                 this.scale = this.scale - _dZoom;
-                // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
+
             }
             // Если увеличение зума
             if (this.prevZoom < this.gestureSpace) {
@@ -195,42 +204,26 @@ class Camera {
                 if (this.scale - (_dZoom) >= 3)
                     return;
 
-                this.cameraImg.style.transform = `scale(${this.scale + _dZoom})`;
+                this.cameraImg.style.transform = `scale(${this.scale + _dZoom},${this.scale + _dZoom})`;
                 this.scale = this.scale + _dZoom;
-                // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
 
             }
-            // console.log(this.gestureCache[0].clientX);
-            // document.querySelector('#log').innerHTML += `<div>${currZoom}</div>`;
         }
 
         this.prevZoom = this.gestureSpace;
 
     }
 
-    /**
-     * Обновляет эвент после движения
-     * @param e
-     */
-    updateEvent(e) {
-        for (let i = 0; i < this.gestureCache.length; i++) {
-            if (this.gestureCache[i].pointerId == e.pointerId) {
-                this.gestureCache[i] = e;
-                break;
-            }
-        }
-    }
-
     rotate(e) {
 
         // this.updateEvent(e);
 
-        let rotate = Math.atan2(this.gestureCache[1].y - this.gestureCache[0].y, this.gestureCache[1].x - this.gestureCache[0].x);
+        let rotate = Math.atan((this.gestureCache[1].y - this.gestureCache[0].y) / (this.gestureCache[1].x - this.gestureCache[0].x));
 
 
-        // if (Math.abs(rotate - this.prevRotate) > 3) {
-        //     rotate = rotate - Math.PI;
-        // }
+        if (Math.abs(rotate - this.prevRotate) > 3) {
+            rotate = rotate - Math.PI;
+        }
 
 
         // Определяем коэффициент изменения
@@ -242,8 +235,9 @@ class Camera {
             dRotate = 0.9;
         }
 
+        // document.querySelector('#log').innerText = rotate * dRotate;
         // Определение яркости
-        this.brightness = rotate * dRotate;
+        this.brightness = Math.abs(rotate * dRotate);
 
         if (this.brightness > this.maxBright) {
             this.brightness = 1;
