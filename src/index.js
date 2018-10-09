@@ -82,7 +82,9 @@ class Camera {
                 if (this.gestureCache.length == 2) {
                     this.updateEvent(e);
 
-                    let angle = (Math.atan((this.gestureCache[1].y - this.gestureCache[0].y) / (this.gestureCache[1].x - this.gestureCache[0].x))) * 180 / Math.PI;
+                    let angle = (Math.atan(
+                        (this.gestureCache[1].y - this.gestureCache[0].y) /
+                        (this.gestureCache[1].x - this.gestureCache[0].x))) * 180 / Math.PI;
 
                     // Проверяем, какое событие происходит
                     if (Math.abs(angle) < 20) {
@@ -104,8 +106,24 @@ class Camera {
                 this.currentGesture = null;
                 this.action.currentShiftX = this.action.dx;
                 this.action.currentShiftY = this.action.dy;
+
+                if (this.action.dx > 0)
+                    this.action.currentShiftX = 0;
+
+                if (((this.action.dx)) <= -this.imgFinishPositionX)
+                    this.action.currentShiftX = -this.imgFinishPositionX;
+
+                if (this.action.dy > 0)
+                    this.action.currentShiftY = 0;
+
+                if (((this.action.dy)) <= -this.imgFinishPositionY)
+                    this.action.currentShiftY = -this.imgFinishPositionY;
+
                 this.removeEvent(e);
                 this.prevZoom = -1;
+
+                console.log(`UP ${this.action.currentShiftX}`);
+
             });
 
             this.camera.addEventListener('pointercancel', (e) => {
@@ -129,43 +147,70 @@ class Camera {
         }
     }
 
+    determDeltaMove(e) {
+        this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
+        this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
+
+        console.log(this.action.dx)
+    }
+
     /**
      * Движение камерой
      * @param e
      */
     move(e) {
-        this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
-        this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
+        // this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
+        // this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
 
         // Максимальный поворот влево
-        if (this.action.dx > 0) {
-            this.camera.style.transform = `translate3d(0px,${this.action.dy}px,0px)`;
-            this.action.dx = 0;
-            return;
+        // if (this.action.dx > 0) {
+        //     this.camera.style.transform = `translate3d(0px,${this.action.dy}px,0px)`;
+        //     this.action.dx = 0;
+        //     return;
+        // }
+        //
+        // // Максимальный поворот вправо
+        // if (this.action.dx < -this.imgFinishPositionX) {
+        //     // this.camera.style.transform = `translate3d(${-this.imgFinishPositionX}px,0px,0px)`;
+        //     this.action.dx = -this.imgFinishPositionX;
+        //     return;
+        // }
+        //
+        // // Максимальный поворот вверх
+        // if (this.action.dy > 0) {
+        //     this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
+        //     this.action.dy = 0;
+        //     return;
+        // }
+        //
+        // // Максимальный поворот вниз
+        // if (this.action.dy < -this.imgFinishPositionY) {
+        //     this.action.dy = -this.imgFinishPositionY;
+        //     return;
+        // }
+        this.determDeltaMove(e);
+
+        if (this.action.dx <= 0 && Math.abs((this.action.dx)) < this.imgFinishPositionX) {
+            console.log(`first loop`)
+            // this.action.currentShiftX = this.action.dx;
+            // this.determDeltaMove(e);
+            // this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
+            this.camera.style.left = `${this.action.dx}px`;
+            // this.action.currentShiftX = this.action.dx;
+
+        } else {
+
         }
 
-        // Максимальный поворот вправо
-        if (this.action.dx < -this.imgFinishPositionX) {
-            // this.camera.style.transform = `translate3d(${-this.imgFinishPositionX}px,0px,0px)`;
-            this.action.dx = -this.imgFinishPositionX;
-            return;
-        }
-
-        // Максимальный поворот вверх
-        if (this.action.dy > 0) {
-            this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
-            this.action.dy = 0;
-            return;
-        }
-
-        // Максимальный поворот вниз
-        if (this.action.dy < -this.imgFinishPositionY) {
-            this.action.dy = -this.imgFinishPositionY;
-            return;
+        if (this.action.dy <= 0 && Math.abs((this.action.dy)) < this.imgFinishPositionY) {
+            // this.determDeltaMove(e);
+            // console.log(`second loop`)
+            // this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
+            this.camera.style.top = `${this.action.dy}px`;
         }
 
         // Смещение камеры
-        this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
+        // this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
 
         // Смещение скролла
         this.scroll.style.left = `${- (this.action.dx * 100) / (this.imgFinishPositionX)}%`;

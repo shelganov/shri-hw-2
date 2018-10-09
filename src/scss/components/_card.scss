@@ -136,6 +136,7 @@
       -webkit-user-drag: none;
       pointer-events: none;
       transform-origin: center center;
+      -webkit-overflow-scrolling: touch;
 
       //-webkit-touch-callout: none;
       //-moz-user-select: none;
@@ -299,6 +300,7 @@
 }
 
 .camera {
+  position: absolute;
   width: 9999px;
   //transition: .2s all;
   //-webkit-backface-visibility: hidden;
