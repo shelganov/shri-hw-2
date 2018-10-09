@@ -40,11 +40,6 @@ class Camera {
 
         this.prevRotate = 0;
 
-        this.touches = {
-            isMove: false,
-            isPitch: false,
-            isRotate: false
-        };
         
         this.init();
     };
@@ -59,9 +54,9 @@ class Camera {
             this.imgFinishPositionX = this.cameraImg.width - document.querySelector('.card__img').offsetWidth;
             this.imgFinishPositionY = this.cameraImg.height - document.querySelector('.card__img').offsetHeight;
             this.scroll = document.querySelector('.card__img-scroll');
-            // console.log(document.querySelector('.card__img').offsetWidth);
+            document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
 
-            // document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
+            // console.log(document.querySelector('.card__img').offsetWidth);
             // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
             /**
              * Тач старт
