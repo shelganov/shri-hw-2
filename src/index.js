@@ -1,5 +1,6 @@
 import './scss/main.scss';
 
+const MAX_BRIGHT_VALUE = 1;
 
 class Camera {
     constructor() {
@@ -27,7 +28,7 @@ class Camera {
         /* Конец картинки по оси Х (для отлова правой границы картинки) */
         this.imgFinishPositionX = null;
 
-        /* Предыдущий зум (сравнивается с последующим для принятия решения - увеличение или уменьшение зума) *.
+        /* Предыдущий зум (сравнивается с последующим для принятия решения - увеличение или уменьшение зума) */
         this.prevZoom = -1;
 
         // this.gestureSpace = -1;
@@ -46,9 +47,9 @@ class Camera {
             this.camera = document.querySelector('.camera');
             this.cameraImg = document.querySelector('.camera__img');
             this.imgFinishPositionX = this.cameraImg.width - 288;
-            const imgFinishPositionY = this.cameraImg.height - 230;
+            this.imgFinishPositionY = this.cameraImg.height - 230;
 
-            document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
+            // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
             /**
              * Тач старт
              */
@@ -83,7 +84,8 @@ class Camera {
 
                 // Если произошло 2 тача
                 if (this.gestureCache.length == 2) {
-                    this.zoom(e);
+                    // this.zoom(e);
+                    this.rotate(e);
                 } else {
                     this.move(e);
                 }
@@ -118,21 +120,39 @@ class Camera {
         this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
         this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
 
+        // document.querySelector('#log1').innerHTML = `X: ${this.action.dx}`;
+        // document.querySelector('#log2').innerHTML = `Y: ${this.action.dy}`;
+
         // Максимальный поворот влево
         if (this.action.dx > 0) {
-            this.camera.style.transform = `translate3d(0px,0px,0px)`;
+            this.camera.style.transform = `translate3d(0px,${this.action.dy}px,0px)`;
             this.action.dx = 0;
             return;
         }
 
         // Максимальный поворот вправо
         if (this.action.dx < -this.imgFinishPositionX) {
-            this.camera.style.transform = `translate3d(${-this.imgFinishPositionX}px,0px,0px)`;
+            // this.camera.style.transform = `translate3d(${-this.imgFinishPositionX}px,0px,0px)`;
             this.action.dx = -this.imgFinishPositionX;
             return;
         }
 
-        this.camera.style.transform = `translate3d(${this.action.dx}px, 0px, 0px`;
+
+        // Максимальный поворот вверх
+        if (this.action.dy > 0) {
+            this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
+            this.action.dy = 0;
+            return;
+        }
+
+        // Максимальный поворот вниз
+        if (this.action.dy < -this.imgFinishPositionY) {
+            // this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
+            this.action.dy = -this.imgFinishPositionY;
+            return;
+        }
+
+        this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px`;
     }
 
     /**
@@ -162,7 +182,7 @@ class Camera {
 
                 this.cameraImg.style.transform = `scale(${this.scale - (_dZoom)})`;
                 this.scale = this.scale - _dZoom;
-                document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
+                // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
             }
             // Если увеличение зума
             if (this.prevZoom < this.gestureSpace) {
@@ -174,7 +194,7 @@ class Camera {
 
                 this.cameraImg.style.transform = `scale(${this.scale + _dZoom})`;
                 this.scale = this.scale + _dZoom;
-                document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
+                // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
 
             }
             console.log(this.gestureCache[0].clientX);
@@ -183,6 +203,27 @@ class Camera {
 
         this.prevZoom = this.gestureSpace;
 
+    }
+
+    rotate(e) {
+
+        for (let i = 0; i < this.gestureCache.length; i++) {
+            if (this.gestureCache[i].pointerId == e.pointerId) {
+                this.gestureCache[i] = e;
+                break;
+            }
+        }
+        let startAngle = 180 / Math.PI * Math.atan2(this.gestureCache[0].x, this.gestureCache[1].x);
+        // let corner = Math.atan2(this.gestureCache[0].clientX, this.gestureCache[1].clientX);
+        let corner = (this.gestureCache[1].y - this.gestureCache[0].y) / (this.gestureCache[1].x - this.gestureCache[0].x)
+        document.querySelector('#log').innerHTML = `start angle: ${startAngle}`;
+
+        if (corner > 1) {
+            this.cameraImg.style.webkitFilter = `brightness(1)`;
+            corner = 1;
+            return;
+        }
+        this.cameraImg.style.webkitFilter = `brightness(${corner}`;
     }
 
     /**
@@ -196,6 +237,10 @@ class Camera {
                 break;
             }
         }
+    }
+
+    get maxBright() {
+        return MAX_BRIGHT_VALUE;
     }
 }
 
