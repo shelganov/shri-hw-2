@@ -39,6 +39,12 @@ class Camera {
         this.brightness = 0.5;
 
         this.prevRotate = 0;
+
+        this.touches = {
+            isMove: false,
+            isPitch: false,
+            isRotate: false
+        };
         
         this.init();
     };
@@ -50,10 +56,12 @@ class Camera {
         document.addEventListener('DOMContentLoaded', () => {
             this.camera = document.querySelector('.camera');
             this.cameraImg = document.querySelector('.camera__img');
-            this.imgFinishPositionX = this.cameraImg.width - 288;
-            this.imgFinishPositionY = this.cameraImg.height - 230;
+            this.imgFinishPositionX = this.cameraImg.width - document.querySelector('.card__img').offsetWidth;
+            this.imgFinishPositionY = this.cameraImg.height - document.querySelector('.card__img').offsetHeight;
+            this.scroll = document.querySelector('.card__img-scroll');
+            console.log(document.querySelector('.card__img').offsetWidth);
 
-            document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
+            // document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
             // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
             /**
              * Тач старт
@@ -78,14 +86,18 @@ class Camera {
                     return;
                 }
 
-                // this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
-                // this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
-                // this.zooms = -(this.action.x - e.x);
-
                 // Если произошло 2 тача
                 if (this.gestureCache.length == 2) {
-                    this.zoom(e);
-                    this.rotate(e);
+                    this.updateEvent(e);
+
+                    let angle = (Math.atan2(this.gestureCache[1].y - this.gestureCache[0].y, this.gestureCache[1].x - this.gestureCache[0].x)) * 180 / Math.PI;
+                    if (Math.abs(angle) < 20) {
+                        this.zoom(e);
+                    } else {
+                        this.rotate(e);
+                    }
+
+                    document.querySelector('#log').innerHTML = ` angle: ${Math.abs(angle)}`;
                 } else {
                     this.move(e);
                 }
@@ -120,9 +132,6 @@ class Camera {
         this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
         this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
 
-        // document.querySelector('#log1').innerHTML = `X: ${this.action.dx}`;
-        // document.querySelector('#log2').innerHTML = `Y: ${this.action.dy}`;
-
         // Максимальный поворот влево
         if (this.action.dx > 0) {
             this.camera.style.transform = `translate3d(0px,${this.action.dy}px,0px)`;
@@ -137,7 +146,6 @@ class Camera {
             return;
         }
 
-
         // Максимальный поворот вверх
         if (this.action.dy > 0) {
             this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
@@ -147,12 +155,15 @@ class Camera {
 
         // Максимальный поворот вниз
         if (this.action.dy < -this.imgFinishPositionY) {
-            // this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
             this.action.dy = -this.imgFinishPositionY;
             return;
         }
 
-        this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px`;
+        // Смещение камеры
+        this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
+
+        // Смещение скролла
+        this.scroll.style.left = `${- (this.action.dx * 100) / this.cameraImg.offsetWidth}%`;
     }
 
     /**
@@ -160,7 +171,7 @@ class Camera {
      */
     zoom(e) {
 
-        this.updateEvent(e);
+        // this.updateEvent(e);
 
         this.gestureSpace = Math.abs(this.gestureCache[0].clientX - this.gestureCache[1].clientX);
 
@@ -215,7 +226,7 @@ class Camera {
 
     rotate(e) {
 
-        this.updateEvent(e);
+        // this.updateEvent(e);
 
         let rotate = Math.atan2(this.gestureCache[1].y - this.gestureCache[0].y, this.gestureCache[1].x - this.gestureCache[0].x);
 
