@@ -7,6 +7,7 @@
   flex-direction: column;
   width: 320px;
   margin: 0 auto;
+  //pointer-events: none;
 
   &:hover {
     cursor: pointer;
@@ -115,13 +116,30 @@
   }
 
   &__img {
-    background-repeat: no-repeat;
-    background-size: auto;
-    background-position: 0;
-    -webkit-overflow-scrolling: touch;
-      height: 230px;
-    &.image-hoover {
-      background-image: url('../img/flat.jpg');
+    height: 230px;
+
+    img {
+      width: auto;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+
+      //-webkit-touch-callout: none;
+      //-moz-user-select: none;
+      //-webkit-user-select: none;
+      //-ms-user-select: none;
+      //user-select: none;
+      //-webkit-user-drag: none;
+      //-webkit-touch-callout: none;
+    }
+    //background-repeat: no-repeat;
+    //background-size: auto;
+    //background-position: 0;
+    //-webkit-overflow-scrolling: touch;
+    //  height: 230px;
+    //&.image-hoover {
+    //  background-image: url('../img/flat.jpg');
 
       //width: 99999px;
       //overflow: auto;
@@ -130,7 +148,7 @@
       //@include m(xs) {
       //  height: 246px;
       //}
-    }
+    //}
   }
 
   & > *:last-child {
@@ -267,4 +285,14 @@
       }
     }
   }
+}
+
+.camera {
+  width: 9999px;
+  //transition: .2s all;
+  //-webkit-backface-visibility: hidden;
+  -webkit-overflow-scrolling: touch;
+  //overflow: scroll;
+
+
 }

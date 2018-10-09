@@ -250,7 +250,8 @@ img {
     clear: both; }
   @media screen and (max-width: 1064px) {
     .container {
-      width: auto; } }
+      width: auto;
+      padding: 0; } }
 
 h1, h2, h3, h4, h4, h6 {
   margin: 0; }
@@ -314,7 +315,7 @@ h1 {
     right: 20px;
     width: 14px;
     height: 14px;
-    background: url(img/cross.svg?cd3e3ab72cc71197a4b8f64e9c2fd14b) no-repeat center;
+    background: url(/dist/img/cross.svg?cd3e3ab72cc71197a4b8f64e9c2fd14b) no-repeat center;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
@@ -334,7 +335,7 @@ h1 {
     right: 20px;
     width: 10px;
     height: 16px;
-    background: url(img/next.svg?dbe8737ad3bdc12b552dcef758b2082d) no-repeat center;
+    background: url(/dist/img/next.svg?dbe8737ad3bdc12b552dcef758b2082d) no-repeat center;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
@@ -396,15 +397,17 @@ h1 {
       .card__text {
         font-size: 18px; } }
   .card__img {
-    background-repeat: no-repeat;
-    -moz-background-size: auto;
-    -o-background-size: auto;
-    background-size: auto;
-    background-position: 0;
-    -webkit-overflow-scrolling: touch;
     height: 230px; }
-    .card__img.image-hoover {
-      background-image: url(img/flat.jpg?5ce2ee3eb96a5f38f3cbb16a22a22b91); }
+    .card__img img {
+      width: auto;
+      -ms-touch-action: none;
+      touch-action: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none; }
   @media screen and (min-width: 768px) {
     .card > *:last-child {
       margin-top: auto; } }
@@ -490,6 +493,10 @@ h1 {
           .card_type_critical .card__content .card__img {
             margin-top: 19px; } }
 
+.camera {
+  width: 9999px;
+  -webkit-overflow-scrolling: touch; }
+
 .icon {
   display: inline-block;
   background-position: center;
@@ -498,5 +505,5 @@ h1 {
   background-size: contain;
   background-repeat: no-repeat; }
   .icon_thumb_cam {
-    background-image: url(img/cam.svg?27b5e2893c8e068675b6e28d0642fb01); }
+    background-image: url(/dist/img/cam.svg?27b5e2893c8e068675b6e28d0642fb01); }
 
