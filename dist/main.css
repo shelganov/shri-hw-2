@@ -299,6 +299,9 @@ h1 {
     .card:hover .card__next {
       visibility: visible;
       opacity: 1; }
+  @media screen and (min-width: 768px) {
+    .card {
+      width: 500px; } }
   .card__icon {
     width: 52px;
     height: 52px;
@@ -387,6 +390,9 @@ h1 {
   @media screen and (max-width: 479px) {
     .card__source {
       font-size: 12px; } }
+  @media screen and (max-width: 479px) {
+    .card__time {
+      font-size: 12px; } }
   .card__text {
     grid-column: span 2;
     width: 100%; }
@@ -397,6 +403,7 @@ h1 {
       .card__text {
         font-size: 18px; } }
   .card__img {
+    position: relative;
     height: 230px; }
     .card__img img {
       width: auto;
@@ -408,9 +415,15 @@ h1 {
       user-select: none;
       -webkit-user-drag: none;
       pointer-events: none; }
-  @media screen and (min-width: 768px) {
-    .card > *:last-child {
-      margin-top: auto; } }
+    .card__img-scroll {
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background-color: rgba(58, 58, 58, 0.61); }
+  .card__camera-stat {
+    margin-top: 10px; }
   .card_size_l {
     grid-column: span 6;
     grid-row: span 6; }
@@ -470,7 +483,8 @@ h1 {
     .card_type_critical .card__source {
       padding-left: 20px; }
     .card_type_critical .card__time {
-      padding-right: 20px; }
+      padding-right: 20px;
+      margin-left: auto; }
     .card_type_critical .card__source,
     .card_type_critical .card__time {
       color: #FFF; }

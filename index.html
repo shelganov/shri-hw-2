@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="dist/main.css">
 </head>
 <body>
-    <div class="content" style="padding-bottom:200px;">
+    <div class="content" >
         <main>
             <div class="container">
                 <div class="card card_type_critical card_size_l">
@@ -29,19 +29,17 @@
                         <div class="card__text">Робопылесос не смог сменить свое местоположение в течение последних 3
                             минут. Похоже, ему нужна помощь.
                         </div>
-                        <!--<div class="card__ws" style="overflow: hidden;">-->
-                        <!--<div class="card__img image-hoover" touch-action="none"></div>-->
-                        <!--</div>-->
-                        <div class="card__img" >
+                        <div class="card__img">
                             <div class="camera" touch-action="none">
                                 <img class="camera__img" src="./dist/img/flat.jpg" alt="" >
                             </div>
+                            <div class="card__img-scroll"></div>
                         </div>
+                        <div class="card__camera-stat">Яркость: <span id="brightness"></span></div>
                     </div>
                 </div>
                 <div id="log"></div>
                 <div id="log1"></div>
-                <div id="log2"></div>
             </div>
         </main>
     </div>

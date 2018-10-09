@@ -20,6 +20,10 @@
     }
   }
 
+  @include m-min(768px) {
+    width: 500px;
+  }
+
   &__icon {
     width: 52px;
     height: 52px;
@@ -102,6 +106,12 @@
     }
   }
 
+  &__time {
+    @include m(xs) {
+      font-size: 12px;
+    }
+  }
+
   &__text {
     grid-column: span 2;
     width: 100%;
@@ -116,6 +126,7 @@
   }
 
   &__img {
+    position: relative;
     height: 230px;
 
     img {
@@ -133,30 +144,28 @@
       //-webkit-user-drag: none;
       //-webkit-touch-callout: none;
     }
-    //background-repeat: no-repeat;
-    //background-size: auto;
-    //background-position: 0;
-    //-webkit-overflow-scrolling: touch;
-    //  height: 230px;
-    //&.image-hoover {
-    //  background-image: url('../img/flat.jpg');
-
-      //width: 99999px;
-      //overflow: auto;
-      //transform: translate3d(-458px, 0, 0);
-
-      //@include m(xs) {
-      //  height: 246px;
-      //}
-    //}
-  }
-
-  & > *:last-child {
-
-    @include m-min(768px) {
-      margin-top: auto;
+    
+    &-scroll {
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background-color: rgba(58, 58, 58, 0.61);
     }
+
   }
+
+  &__camera-stat {
+    margin-top: 10px;
+  }
+
+  //& > *:last-child {
+  //
+  //  @include m-min(768px) {
+  //    margin-top: auto;
+  //  }
+  //}
 
 
   // Вариации карточек - размеры
@@ -251,8 +260,9 @@
 
     .card__time {
       padding-right: 20px;
+      margin-left: auto;
     }
-    
+
     .card__source,
     .card__time {
       color: #FFF;

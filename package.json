@@ -6,7 +6,7 @@
   "scripts": {
     "prod": "webpack --mode production",
     "dev": "webpack --watch --mode development",
-    "start": "webpack-dev-server --host 192.168.0.14 --port 3000"
+    "start": "webpack-dev-server --host 172.16.2.88 --port 3000"
   },
   "repository": {
     "type": "git",

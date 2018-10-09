@@ -36,6 +36,10 @@ class Camera {
         /* Стандартный масштаб камеры */
         this.scale = 1;
 
+        this.brightness = 0.5;
+
+        this.prevRotate = 0;
+        
         this.init();
     };
 
@@ -49,6 +53,7 @@ class Camera {
             this.imgFinishPositionX = this.cameraImg.width - 288;
             this.imgFinishPositionY = this.cameraImg.height - 230;
 
+            document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
             // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
             /**
              * Тач старт
@@ -63,11 +68,6 @@ class Camera {
                 this.camera.setPointerCapture(e.pointerId);
 
                 console.log(e);
-
-                // Запись в лог всех событий
-                // for (let i = 0; i < this.gestureCache.length; i++) {
-                //     document.querySelector('#log').innerHTML += `<div> id: ${this.gestureCache[i]}</div>`;
-                // }
             });
 
             /**
@@ -84,7 +84,7 @@ class Camera {
 
                 // Если произошло 2 тача
                 if (this.gestureCache.length == 2) {
-                    // this.zoom(e);
+                    this.zoom(e);
                     this.rotate(e);
                 } else {
                     this.move(e);
@@ -160,12 +160,7 @@ class Camera {
      */
     zoom(e) {
 
-        for (let i = 0; i < this.gestureCache.length; i++) {
-            if (this.gestureCache[i].pointerId == e.pointerId) {
-                this.gestureCache[i] = e;
-                break;
-            }
-        }
+        this.updateEvent(e);
 
         this.gestureSpace = Math.abs(this.gestureCache[0].clientX - this.gestureCache[1].clientX);
 
@@ -197,7 +192,7 @@ class Camera {
                 // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
 
             }
-            console.log(this.gestureCache[0].clientX);
+            // console.log(this.gestureCache[0].clientX);
             // document.querySelector('#log').innerHTML += `<div>${currZoom}</div>`;
         }
 
@@ -205,25 +200,55 @@ class Camera {
 
     }
 
-    rotate(e) {
-
+    /**
+     * Обновляет эвент после движения
+     * @param e
+     */
+    updateEvent(e) {
         for (let i = 0; i < this.gestureCache.length; i++) {
             if (this.gestureCache[i].pointerId == e.pointerId) {
                 this.gestureCache[i] = e;
                 break;
             }
         }
-        let startAngle = 180 / Math.PI * Math.atan2(this.gestureCache[0].x, this.gestureCache[1].x);
-        // let corner = Math.atan2(this.gestureCache[0].clientX, this.gestureCache[1].clientX);
-        let corner = (this.gestureCache[1].y - this.gestureCache[0].y) / (this.gestureCache[1].x - this.gestureCache[0].x)
-        document.querySelector('#log').innerHTML = `start angle: ${startAngle}`;
+    }
 
-        if (corner > 1) {
-            this.cameraImg.style.webkitFilter = `brightness(1)`;
-            corner = 1;
-            return;
+    rotate(e) {
+
+        this.updateEvent(e);
+
+        let rotate = Math.atan2(this.gestureCache[1].y - this.gestureCache[0].y, this.gestureCache[1].x - this.gestureCache[0].x);
+
+
+        // if (Math.abs(rotate - this.prevRotate) > 3) {
+        //     rotate = rotate - Math.PI;
+        // }
+
+
+        // Определяем коэффициент изменения
+        let dRotate = 1;
+
+        if (rotate > this.prevRotate) {
+            dRotate = 1.1;
+        } else if (rotate < this.prevRotate) {
+            dRotate = 0.9;
         }
-        this.cameraImg.style.webkitFilter = `brightness(${corner}`;
+
+        // Определение яркости
+        this.brightness = rotate * dRotate;
+
+        if (this.brightness > this.maxBright) {
+            this.brightness = 1;
+        }
+
+        if (this.brightness <= 0)
+            this.brightness = 0;
+
+        this.prevRotate = rotate;
+
+        // let fixedBrightness = this.brightness.toFixed(2) * 100;
+        document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
+        this.cameraImg.style.webkitFilter = `brightness(${this.brightness}`;
     }
 
     /**
