@@ -59,7 +59,7 @@ class Camera {
             this.imgFinishPositionX = this.cameraImg.width - document.querySelector('.card__img').offsetWidth;
             this.imgFinishPositionY = this.cameraImg.height - document.querySelector('.card__img').offsetHeight;
             this.scroll = document.querySelector('.card__img-scroll');
-            console.log(document.querySelector('.card__img').offsetWidth);
+            // console.log(document.querySelector('.card__img').offsetWidth);
 
             // document.querySelector('#brightness').innerText = `${this.brightness.toFixed(2) * 100}%`;
             // document.querySelector('#log').innerHTML = `scale: ${this.scale}`;
@@ -162,8 +162,10 @@ class Camera {
         // Смещение камеры
         this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
 
+        console.log(this.cameraImg.offsetWidth)
         // Смещение скролла
-        this.scroll.style.left = `${- (this.action.dx * 100) / this.cameraImg.offsetWidth}%`;
+        this.scroll.style.left = `${- (this.action.dx * 100) / (this.imgFinishPositionX)}%`;
+        // this.scroll.style.transform = `translateX(${-this.action.dx}px)`;
     }
 
     /**
