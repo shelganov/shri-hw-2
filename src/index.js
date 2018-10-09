@@ -107,6 +107,7 @@ class Camera {
                 this.action.currentShiftX = this.action.dx;
                 this.action.currentShiftY = this.action.dy;
 
+                // Задаем максимально возможные позиции картинки по краям
                 if (this.action.dx > 0)
                     this.action.currentShiftX = 0;
 
@@ -121,9 +122,6 @@ class Camera {
 
                 this.removeEvent(e);
                 this.prevZoom = -1;
-
-                console.log(`UP ${this.action.currentShiftX}`);
-
             });
 
             this.camera.addEventListener('pointercancel', (e) => {
@@ -147,6 +145,10 @@ class Camera {
         }
     }
 
+    /**
+     * Определяет дельту смещения между координатой 1ого нажатия и координатой после сдвига + изначальное положение
+     * @param e
+     */
     determDeltaMove(e) {
         this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
         this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
@@ -159,70 +161,27 @@ class Camera {
      * @param e
      */
     move(e) {
-        // this.action.dx = -(this.action.x - e.x) + this.action.currentShiftX;
-        // this.action.dy = -(this.action.y - e.y) + this.action.currentShiftY;
-
-        // Максимальный поворот влево
-        // if (this.action.dx > 0) {
-        //     this.camera.style.transform = `translate3d(0px,${this.action.dy}px,0px)`;
-        //     this.action.dx = 0;
-        //     return;
-        // }
-        //
-        // // Максимальный поворот вправо
-        // if (this.action.dx < -this.imgFinishPositionX) {
-        //     // this.camera.style.transform = `translate3d(${-this.imgFinishPositionX}px,0px,0px)`;
-        //     this.action.dx = -this.imgFinishPositionX;
-        //     return;
-        // }
-        //
-        // // Максимальный поворот вверх
-        // if (this.action.dy > 0) {
-        //     this.camera.style.transform = `translate3d(${this.action.dx}px,0px,0px)`;
-        //     this.action.dy = 0;
-        //     return;
-        // }
-        //
-        // // Максимальный поворот вниз
-        // if (this.action.dy < -this.imgFinishPositionY) {
-        //     this.action.dy = -this.imgFinishPositionY;
-        //     return;
-        // }
         this.determDeltaMove(e);
 
         if (this.action.dx <= 0 && Math.abs((this.action.dx)) < this.imgFinishPositionX) {
-            console.log(`first loop`)
-            // this.action.currentShiftX = this.action.dx;
-            // this.determDeltaMove(e);
-            // this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
             this.camera.style.left = `${this.action.dx}px`;
-            // this.action.currentShiftX = this.action.dx;
 
-        } else {
-
+            // Смещение скролла
+            this.scroll.style.transform = `translateX(${ 
+                -( (document.querySelector('.card__img').offsetWidth - this.scroll.offsetWidth) * 
+                (this.action.dx) ) / 
+                (this.cameraImg.offsetWidth - document.querySelector('.card__img').offsetWidth)}%)`;
         }
 
         if (this.action.dy <= 0 && Math.abs((this.action.dy)) < this.imgFinishPositionY) {
-            // this.determDeltaMove(e);
-            // console.log(`second loop`)
-            // this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
             this.camera.style.top = `${this.action.dy}px`;
         }
-
-        // Смещение камеры
-        // this.camera.style.transform = `translate3d(${this.action.dx}px, ${this.action.dy}px, 0px)`;
-
-        // Смещение скролла
-        this.scroll.style.left = `${- (this.action.dx * 100) / (this.imgFinishPositionX)}%`;
-        // this.scroll.style.transform = `translateX(${-this.action.dx}px)`;
     }
 
     /**
      * Зум
      */
     zoom(e) {
-
-        // this.updateEvent(e);
 
         this.gestureSpace = Math.abs(this.gestureCache[0].clientX - this.gestureCache[1].clientX);
 
